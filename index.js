@@ -19,6 +19,16 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const db = client.db("mydatabase");
+    const userCollection = db.collection("users");
+    const userJob = db.collection("jobs");
+    const user = {name:"Shuvo", email:"eng.shuvo03@gmail.com", age:25, job:"Software Engineeer"}
+    // add user to the users collection
+    userCollection.insertOne(user);
+
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
