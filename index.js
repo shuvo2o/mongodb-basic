@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors');
 const app = express()
+const { ObjectId } = require('mongodb');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const port = process.env.PORT || 3000
 
@@ -53,6 +54,22 @@ async function run() {
                 res.status(200).json({
                     message: "Users fetched successfully",
                     users
+                })
+            } catch (error) {
+                res.status(403).json({
+                    message:"Failed to fetch users",
+                    error
+                })
+            }
+        })
+        // find single user
+        app.get("/users/:id", async (req, res) =>{
+            try {
+                const id = req.params.id;
+                const user = await userCollection.findOne({ _id: new ObjectId(id) });
+                res.status(200).json({
+                    message: "User fetched successfully",
+                    user
                 })
             } catch (error) {
                 res.status(403).json({
