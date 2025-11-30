@@ -41,14 +41,14 @@ async function run() {
                 })
             } catch (error) {
                 res.status(403).json({
-                    message:"Failed to create user",
+                    message: "Failed to create user",
                     error
                 })
             }
         })
 
         // find all users
-        app.get("/users", async (req, res) =>{
+        app.get("/users", async (req, res) => {
             try {
                 const users = await userCollection.find().toArray();
                 res.status(200).json({
@@ -57,13 +57,13 @@ async function run() {
                 })
             } catch (error) {
                 res.status(403).json({
-                    message:"Failed to fetch users",
+                    message: "Failed to fetch users",
                     error
                 })
             }
         })
         // find single user
-        app.get("/users/:id", async (req, res) =>{
+        app.get("/users/:id", async (req, res) => {
             try {
                 const id = req.params.id;
                 const user = await userCollection.findOne({ _id: new ObjectId(id) });
@@ -73,11 +73,40 @@ async function run() {
                 })
             } catch (error) {
                 res.status(403).json({
-                    message:"Failed to fetch users",
+                    message: "Failed to fetch users",
                     error
                 })
             }
         })
+
+        // update user
+        app.patch("/update-user/:id", async (req, res) => {
+            try {
+                const id = req.params.id;
+                const userData = req.body;
+
+                const filter = { _id: new ObjectId(id) };
+
+                const updatedInfo = {
+                    $set: {
+                       ...userData
+                    }
+                };
+
+                const result = await userCollection.updateOne(filter, updatedInfo);
+
+                res.status(200).json({
+                    message: "User updated successfully",
+                    result
+                });
+
+            } catch (error) {
+                res.status(403).json({
+                    message: "Failed to update user",
+                    error
+                });
+            }
+        });
 
 
 
