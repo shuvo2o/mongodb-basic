@@ -73,7 +73,7 @@ async function run() {
                 })
             } catch (error) {
                 res.status(403).json({
-                    message: "Failed to fetch users",
+                    message: "Failed to update users",
                     error
                 })
             }
@@ -89,7 +89,7 @@ async function run() {
 
                 const updatedInfo = {
                     $set: {
-                       ...userData
+                        ...userData
                     }
                 };
 
@@ -108,8 +108,23 @@ async function run() {
             }
         });
 
+        // update many users
+        app.patch("/users/increase-age", async (req, res) => {
+            try {
+                const result = await userCollection.updateMany(
+                    { age: { $type: "int" } },
+                    { $inc: { age: 2 } }
+                );
 
+                res.json(result);
 
+            } catch (error) {
+                res.status(403).json({
+                    message: "Failed to update users",
+                    error
+                });
+            }
+        });
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
