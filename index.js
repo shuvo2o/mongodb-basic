@@ -125,6 +125,23 @@ async function run() {
                 });
             }
         });
+
+        // delete user 
+        app.delete("/delete-user/:id", async (req, res) => {
+            const {id} = req.params;
+            try {
+               const deletedUser = await userCollection.deleteOne({_id: new ObjectId(id)});
+               res.json({
+                message: "User deleted successfully",
+                deletedUser
+               }) 
+            } catch (error) {
+                res.status(403).json({
+                    message: "Failed to delete user",
+                    error
+                });
+            }
+        })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
