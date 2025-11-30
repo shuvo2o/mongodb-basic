@@ -112,11 +112,17 @@ async function run() {
         app.patch("/users/increase-age", async (req, res) => {
             try {
                 const result = await userCollection.updateMany(
-                    { age: { $type: "int" } },
-                    { $inc: { age: 2 } }
+                    { age: { $type: "int" } },   // only where age is numeric
+                    {
+                        $inc: { age: 2 },        // increase age
+                        $set: { status: "pending" }  // add/update status
+                    }
                 );
 
-                res.json(result);
+                res.json({
+                    message: "Users updated successfully",
+                    result
+                });
 
             } catch (error) {
                 res.status(403).json({
@@ -126,15 +132,16 @@ async function run() {
             }
         });
 
+
         // delete user 
         app.delete("/delete-user/:id", async (req, res) => {
-            const {id} = req.params;
+            const { id } = req.params;
             try {
-               const deletedUser = await userCollection.deleteOne({_id: new ObjectId(id)});
-               res.json({
-                message: "User deleted successfully",
-                deletedUser
-               }) 
+                const deletedUser = await userCollection.deleteOne({ _id: new ObjectId(id) });
+                res.json({
+                    message: "User deleted successfully",
+                    deletedUser
+                })
             } catch (error) {
                 res.status(403).json({
                     message: "Failed to delete user",
@@ -142,6 +149,26 @@ async function run() {
                 });
             }
         })
+        // delete many users
+        app.delete("/delete-user/status/:status", async (req, res) => {
+            try {
+                const status = req.params.status;
+
+                const deletedUsers = await userCollection.deleteMany({ status });
+
+                res.json({
+                    message: "Users deleted successfully",
+                    deletedUsers
+                });
+
+            } catch (error) {
+                res.status(403).json({
+                    message: "Failed to delete users",
+                    error
+                });
+            }
+        });
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
