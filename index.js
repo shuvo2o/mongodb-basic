@@ -190,6 +190,14 @@ async function run() {
             })
         })
 
+        // element operators
+        app.get("/users/element-operators/with-status", async (req, res)=>{
+            const users = await userCollection.find({
+                dream: {$exists: true}
+            }).toArray();
+            res.json(users);
+        } )
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
