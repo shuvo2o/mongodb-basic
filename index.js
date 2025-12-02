@@ -179,6 +179,18 @@ async function run() {
             })
         })
 
+        // logical operators
+        app.get("/users/logical-operators/and", async (req, res)=>{
+            const users = await userCollection.find({$and: [
+                {age: {$gte: 31}},
+                {status: "active"} ]}).toArray();
+            res.json({
+                message: "Users filterd succesfully",
+                users
+            })
+        })
+
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
