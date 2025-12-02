@@ -172,7 +172,7 @@ async function run() {
         // find users using $gt operator
         app.get("/users/older-than/:age", async (req, res)=>{
             const age = req.params.age;
-            const users = await userCollection.find({age: {$gt: parseInt(age)}}).toArray();
+            const users = await userCollection.find({age: {$gte: parseInt(age)}}).toArray();
             res.json({
                 message: "Users filterd succesfully",
                 users
