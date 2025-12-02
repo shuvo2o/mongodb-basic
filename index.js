@@ -169,6 +169,16 @@ async function run() {
             }
         });
 
+        // find users using $gt operator
+        app.get("/users/older-than/:age", async (req, res)=>{
+            const age = req.params.age;
+            const users = await userCollection.find({age: {$gt: parseInt(age)}}).toArray();
+            res.json({
+                message: "Users filterd succesfully",
+                users
+            })
+        })
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
