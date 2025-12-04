@@ -205,6 +205,14 @@ async function run() {
             res.json(users);
         })
 
+        // pagination
+        app.get("/users/page/:page", async(req, res)=>{
+            const page = parseInt(req.params.page) || 1;
+            const limit = 5;
+            const skip = (page - 1) * limit;
+            const users = await userCollection.find().sort({age:-1}).skip(skip).limit(limit).toArray();
+            res.json(users);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
