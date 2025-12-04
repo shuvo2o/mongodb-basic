@@ -198,6 +198,13 @@ async function run() {
             res.json(users);
         } )
 
+        app.get("/array/operators/skills", async (req, res)=>{
+            const users = await userCollection.find({
+                skils: {$all: ["javascript"]}
+            }).toArray();
+            res.json(users);
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
