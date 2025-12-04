@@ -50,7 +50,7 @@ async function run() {
         // find all users
         app.get("/users", async (req, res) => {
             try {
-                const users = await userCollection.find().toArray();
+                const users = await userCollection.find().sort({ age:-1}).toArray();
                 res.status(200).json({
                     message: "Users fetched successfully",
                     users
